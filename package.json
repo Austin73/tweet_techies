@@ -1,0 +1,31 @@
+{
+  "name": "tweet_techies",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon db.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Austin73/tweet_techies.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Austin73/tweet_techies/issues"
+  },
+  "homepage": "https://github.com/Austin73/tweet_techies#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "connect-mongodb-session": "^3.1.1",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "express-session": "^1.17.2",
+    "mongoose": "^6.2.4",
+    "nodemon": "^2.0.15",
+    "validator": "^13.7.0"
+  }
+}
