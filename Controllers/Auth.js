@@ -6,6 +6,12 @@ const User = require('../Models/User');
 /// We can JOI library for data validation
 // Don't pass req ,and res object to any function of model or anywhere, use this in only controller
 // req and res is just json object
+
+
+// implement forgot password
+// 1. email the password- reset password
+// 2. email link and enter new password
+
 authRouter.post('/login',async (req, res) => {
 
     const { loginId, password } = req.body;
