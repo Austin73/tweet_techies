@@ -1,5 +1,5 @@
 const express = require('express');
-
+const isAuth = require('../Utils/Auth')
 const tweetsRouter = express.Router();
 const Tweeets = require('../Models/Tweet')
 const tweetsSchema = require('../Schemas/Tweets')
@@ -198,7 +198,7 @@ tweetsRouter.post('/edit-tweet', async (req, res) => {
 
 
 
-tweetsRouter.post('/delete-tweet', async (req, res) => {
+tweetsRouter.post('/delete-tweet', async(req,res) => {
 
     // const { userId } = req.session.user;
     const { tweetId, userId } = req.body

@@ -7,6 +7,7 @@ const mongoDbSession = require('connect-mongodb-session')(session);
 
 const authRouter = require('./Controllers/Auth')
 const tweetsRouter= require('./Controllers/Tweets')
+const followRouter = require('./Controllers/Follow');
 const app= express()
 
 
@@ -30,6 +31,7 @@ app.use(session({
 
 app.use('/auth',authRouter)
 app.use('/tweets',tweetsRouter)
+app.use('/follow',followRouter)
 app.get('/',(req,res)=>{
     res.send({
         status:200,

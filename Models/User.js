@@ -45,7 +45,7 @@ class User {
                 if (user && user.username === username) {
                     return reject("User name already exist")
                 }
-                
+
                 return resolve();
 
             }
@@ -73,8 +73,8 @@ class User {
                 return resolve({
                     name: dbUser.name,
                     username: dbUser.username,
-                    email : dbUser.email,
-                    _id : dbUser._id
+                    email: dbUser.email,
+                    _id: dbUser._id
                 });
             } catch (error) {
                 return reject(error)
@@ -108,9 +108,22 @@ class User {
             resolve({
                 name: dbUser.name,
                 username: dbUser.username,
-                email : dbUser.email,
-                _id : dbUser._id
+                email: dbUser.email,
+                _id: dbUser._id
             })
+        })
+    }
+
+
+    static verifyUserIdExist({ followingUserId }) {
+        return new Promise(async (resolve, reject) => {
+
+            try {
+                const userDb = await userSchema.findOne({ _id: followingUserId });
+                resolve(userDb)
+            } catch (error) {
+                reject(error)
+            }
         })
     }
 }

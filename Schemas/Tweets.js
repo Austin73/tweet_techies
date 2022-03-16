@@ -1,5 +1,8 @@
 const mongoose= require('mongoose');
 
+
+// while checcking for 1NF 2NF ,check whether on changing 1 column is forccing other
+//column to change
 const Schema = mongoose.Schema ;
 const tweetsSchema = new Schema({
    title :{
