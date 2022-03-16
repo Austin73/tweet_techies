@@ -1,5 +1,5 @@
 const express = require('express');
-const { cleanUpAndValidate } = require('../Utils/Auth')
+const { cleanUpAndValidate,isAuth } = require('../Utils/Auth')
 const authRouter = express.Router();
 const User = require('../Models/User');
 
@@ -101,7 +101,7 @@ authRouter.post('/register', async (req, res) => {
 
 
 
-authRouter.post('/logout', (req, res) => {
+authRouter.post('/logout',isAuth, (req, res) => {
 
     if(!req.session.isAuth)
     {

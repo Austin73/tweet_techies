@@ -13,7 +13,7 @@ class Tweeets {
             this.bodyText = bodyText,
             this.userId = userId,
             this.creationDateTime = creationDateTime,
-            this.tweetId = this.tweetId
+            this.tweetId = tweetId
     }
 
     createTweets() {
@@ -101,7 +101,9 @@ class Tweeets {
 
         return new Promise(async (resolve, reject) => {
             try {
+                
                 const tweetData = await tweetsSchema.findOne({ _id: this.tweetId })
+                console.log(tweetData);
                 resolve(tweetData)
             } catch (error) {
                 return reject(error)
@@ -127,6 +129,20 @@ class Tweeets {
                 return reject(error)
 
             }
+        })
+    }
+
+    //delete tweet
+     deleteTweet() {
+        return new Promise(async (resolve, reject) => {
+
+            try {
+                const deleteDb = await tweetsSchema.findOneAndDelete({ _id: this.tweetId })
+                resolve(deleteDb)
+            } catch (error) {
+                return reject(error)
+            }
+
         })
     }
 }

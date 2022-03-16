@@ -107,9 +107,18 @@ tweetsRouter.post('/get-my-tweets', async (req, res) => {
 // req.session.u
 tweetsRouter.post('/edit-tweet', async (req, res) => {
 
+
+    if(!req.body.tweetId || !req.body.data)
+    {
+        return res.send({
+            status:500,
+            message:"required field not present"
+        })
+    }
     const { title, bodyText } = req.body.data;
-    const { tweetId } = req.body
-    const userId = req.session.user.userId
+    const { tweetId, userId } = req.body
+    // const {userId }= req.session.user
+
     if (!title && !bodyText) {
         return res.send({
             status: 401,
@@ -139,13 +148,19 @@ tweetsRouter.post('/edit-tweet', async (req, res) => {
             message: "Title and bodytext too long. Allowed chars for title is 200 and bodytext is 1000."
         })
     }
-
-    const tweet= new Tweeets({title,bodyText,userId,tweetId})
+    console.log(userId);
+    const tweet = new Tweeets({ title, bodyText, userId, tweetId })
     try {
 
         // check if the tweet belongs to this user only who is logged in
         const tweetData = await tweet.getTweetDataFromTweetId()
-        if (userId !== tweetData.userId) {
+        if (!tweetData) {
+            return res.send({
+                status: 403,
+                message: "Tweet doesn't exit ,seems already deleted"
+            })
+        }
+        if (userId.toString() !== tweetData.userId.toString()) {
             return res.send({
                 status: 400,
                 message: "Edit not allowed, tweets owned by some other user"
@@ -159,28 +174,69 @@ tweetsRouter.post('/edit-tweet', async (req, res) => {
         const diff = (currentDateTime - creationDateTime.getTime()) / (1000 * 60);
         if (diff > 30) {
             return res.send({
-                status: 401,
+                status: 402,
                 message: "Edit not allowed after 30 minute of creation"
             })
         }
-      // update the tweet 
+        // update the tweet 
 
-      const tweetDb= await tweet.editTweets()
-     
-      return res.send({
-          status: 200,
-          message:"Edit successful",
-          data: tweetDb
-      })
+        const tweetDb = await tweet.editTweets()
+
+        return res.send({
+            status: 200,
+            message: "Edit successful",
+            data: tweetDb
+        })
 
     } catch (error) {
         return res.send({
             status: 401,
-            error: error
+            error: error.message
         })
     }
+})
 
 
 
+tweetsRouter.post('/delete-tweet', async (req, res) => {
+
+    // const { userId } = req.session.user;
+    const { tweetId, userId } = req.body
+    if (!tweetId) {
+        return res.send({
+            status: 401,
+            message: "Missing tweetid"
+        })
+    }
+    try {
+
+        const tweet = new Tweeets({ tweetId })
+        const tweetData = await tweet.getTweetDataFromTweetId()
+        if (!tweetData) {
+            return res.send({
+                status: 403,
+                message: "Tweet doesn't exit ,seems already deleted"
+            })
+        }
+        if (userId.toString() !== tweetData.userId.toString()) {//check if user owns tweet to delete  
+            return res.send({
+                status: 401,
+                message: "Deletion not allowed",
+                error: "Tweet owned by some other user"
+            })
+        }
+
+        const deleteData = await tweet.deleteTweet();
+        return res.send({
+            status: 200,
+            message: "Deletion successful",
+            data: deleteData
+        })
+    } catch (error) {
+        return res.send({
+            status: 401,
+            message: error.message
+        })
+    }
 })
 module.exports = tweetsRouter

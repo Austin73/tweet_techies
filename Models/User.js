@@ -45,7 +45,7 @@ class User {
                 if (user && user.username === username) {
                     return reject("User name already exist")
                 }
-                console.log("IN verificaton before resolve");
+                
                 return resolve();
 
             }
