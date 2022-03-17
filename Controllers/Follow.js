@@ -2,8 +2,9 @@ const express = require('express')
 const { validateMongoDbUserId } = require('../Utils/Follow')
 const followRouter = express.Router();
 const User = require('../Models/User')
-const { followUser } = require('../Models/Follow')
-followRouter.post('follow-user', async (req, res) => {
+const {isAuth} = require('../Utils/Auth')
+const { followUser,followingList } = require('../Models/Follow')
+followRouter.post('follow-user',isAuth, async (req, res) => {
 
     const followerUserId = req.session.user.userId;
     const { followingUserId } = req.body;
@@ -59,6 +60,52 @@ followRouter.post('follow-user', async (req, res) => {
 
 })
 
+followRouter.get('/following-list/:userId',async (req,res)=>{
 
+    const userId= req.params;
+    const offset= req.query
+    if(!validateMongoDbUserId({userId})){
+          res.send({
+              status:400,
+              message:"UserId not valid"
+          })
+    }
+
+
+//User -100M in our website
+
+//Follow= - 1B rows (100*10K)
+//  searcching in follow table wiill be costly,so we should ccheck if particular user exist
+
+
+
+try {
+    const userDb = await User.verifyUserIdExist( userId )
+    if (!userDb) {
+        return res.send({
+            status: 404,
+            message: "This user doesn't exist"
+        })
+    }
+
+    const followingUserDetails = await followingList({followerUserId:userId,offset})
+    return res.send({
+        status:200,
+        message:"Find all followers ",
+        data:followingUserDetails
+    })
+} catch (error) {
+    return res.send({
+        status: 400,
+        message: error.message
+    })
+}
+
+})
 
 module.exports = followRouter;
+
+//User -100M in our website
+
+//Follow= - 1B rows (100*10K)
+//  searcching in follow table wiill be costly,so we should ccheck if particular user exist

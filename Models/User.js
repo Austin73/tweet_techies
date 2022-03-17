@@ -115,7 +115,7 @@ class User {
     }
 
 
-    static verifyUserIdExist({ followingUserId }) {
+    static verifyUserIdExist( followingUserId ) {
         return new Promise(async (resolve, reject) => {
 
             try {

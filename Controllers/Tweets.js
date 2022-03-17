@@ -1,9 +1,9 @@
 const express = require('express');
-const isAuth = require('../Utils/Auth')
+const {isAuth} = require('../Utils/Auth')
 const tweetsRouter = express.Router();
 const Tweeets = require('../Models/Tweet')
 const tweetsSchema = require('../Schemas/Tweets')
-tweetsRouter.post('/create-tweet', async (req, res) => {
+tweetsRouter.post('/create-tweet',isAuth, async (req, res) => {
 
     const { title, bodyText, userId } = req.body;
     // const { userId } = req.session.user;
